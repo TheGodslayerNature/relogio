@@ -6,7 +6,7 @@ import {
   StatusBar,
   SafeAreaView,
   Image,
-  Pressable,
+  Easing,
 } from "react-native";
 import moment from "moment";
 import { Animated } from "react-native";
@@ -22,38 +22,69 @@ export default function App() {
   const [currentDate, setCurrentDate] = useState("");
   const [timezone, setTimezone] = useState(Timezone.Brasil);
 
-  useEffect(() => {
+  useEffect(() => {    
     let date = moment().utcOffset(timezone).format("DD/MM/YYYY HH:mm:ss");
     setCurrentDate(date);
-
+    
     const intervalId = setInterval(() => {
-      let date = moment().utcOffset(timezone).format("DD/MM/YYYY HH:mm:ss");
+       date = moment().utcOffset(timezone).format("DD/MM/YYYY HH:mm:ss");
 
       setCurrentDate(date);
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
-  }, [timezone]);
+  },[timezone]);
 
   function mudarHorarioBrasil() {
+    imageRotate();
     setTimezone(Timezone.Brasil);
+    console.log("Timezone set to Brazil");
   }
 
   function mudarHorarioLondres() {
+    rotateImg();
     setTimezone(Timezone.Londres);
+    console.log("Timezone set to London");
   }
 
   function mudarHorarioJapao() {
+    rotateImg();
     setTimezone(Timezone.Japao);
+    console.log("Timezone set to Japan");
   }
+
+  let rotateValue = new Animated.Value(0)
+
+  function rotateImg() {
+    rotateValue.setValue(0);
+    Animated.timing(rotateValue, {
+      toValue: 1,
+      easing: Easing.linear,
+      useNativeDriver: false
+    }).start()
+  }
+
+  const imageRotate = () => {
+    rotateValue.setValue(0);
+    Animated.timing(rotateValue, {
+      toValue: 1,
+      easing: Easing.linear,
+      useNativeDriver: false
+    }).start()
+  }
+
+  const RotateData = rotateValue.interpolate({
+    inputRange: [0,1],
+    outputRange: ['0deg', '360deg']
+  })
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
       <View>
         <Animated.Image
-          source={require("./src/img/crono.png")}
-          style={[styles.img]}
+          source={require("./assets/img/crono.png")}
+          style={[styles.img, {transform: [{rotate: RotateData}]}]}
         />
         <Text style={[styles.horaStyle]}>Data e Hora </Text>
         <Text style={[styles.horaAtual]}>{currentDate}</Text>
@@ -64,7 +95,7 @@ export default function App() {
               styles.btn,
               timezone == Timezone.Brasil
                 ? styles.btnDisabled
-                : styles.btnEnabled,
+                : styles.btnEnabled, imageRotate
             ]}
             activeOpacity={0.8}
             onPress={mudarHorarioBrasil}
@@ -81,7 +112,8 @@ export default function App() {
             ]}
             activeOpacity={0.8}
             onPress={mudarHorarioLondres}
-            disabled = {timezone == Timezone.Londres}
+            onPressIn={rotateImg()}
+            disabled={timezone == Timezone.Londres}
           >
             <Text style={[styles.btnText]}>Horario de Londres</Text>
           </TouchableOpacity>
@@ -94,7 +126,7 @@ export default function App() {
             ]}
             activeOpacity={0.8}
             onPress={mudarHorarioJapao}
-            disabled = {timezone == Timezone.Japao}
+            disabled={timezone == Timezone.Japao}
           >
             <Text style={[styles.btnText]}>Horario do Japão</Text>
           </TouchableOpacity>
@@ -134,8 +166,8 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
   btn: {
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
     height: 50,
     borderRadius: 25,
     marginTop: 5,
@@ -157,6 +189,7 @@ const styles = StyleSheet.create({
     height: 250,
     marginBottom: -100,
     opacity: 0.7,
+    resizeMode: "contain",
     //transform: [{ rotate: '180deg'}]
   },
 });
