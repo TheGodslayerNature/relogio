@@ -21,6 +21,7 @@ export default function App() {
   const [currentDate, setCurrentDate] = useState("");
   const [timezone, setTimezone] = useState(Timezone.Brasil);
   const [spinValue, setSpinValue] = useState(new Animated.Value(0));
+  const [actualCountry, setActualCountry] = new useState("Brasil")
 
   useEffect(() => {
     let date = moment().utcOffset(timezone).format("DD/MM/YYYY HH:mm:ss");
@@ -37,16 +38,19 @@ export default function App() {
 
   function mudarHorarioBrasil() {
     setTimezone(Timezone.Brasil);
+    setActualCountry("Brasil")
     console.log("Timezone set to Brazil");
   }
 
   function mudarHorarioLondres() {
     setTimezone(Timezone.Londres);
+    setActualCountry("Londres")
     console.log("Timezone set to London");
   }
 
   function mudarHorarioJapao() {
     setTimezone(Timezone.Japao);
+    setActualCountry("Japão")
     console.log("Timezone set to Japan");
   }
 
@@ -71,8 +75,8 @@ export default function App() {
           source={require("./assets/img/crono3.png")}
           style={[styles.img, { transform: [{ rotate: spin }] }]}
         />
-        <Text style={[styles.horaStyle]}>Data e Hora </Text>
-        <Text style={[styles.horaAtual]}>{currentDate}</Text>
+        <Text style={[styles.horaStyle]}>Data e Hora atual de {actualCountry}</Text>
+        <Text style={[styles.horaAtual]}> {currentDate}</Text>
 
         <View style={styles.btnContainer}>
           <TouchableOpacity
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#18af75",
   },
   horaStyle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: "black",
     justifyContent: "center",
@@ -149,7 +153,7 @@ const styles = StyleSheet.create({
     fontFamily: "lugrasimo",
     alignSelf: "center",
     marginTop: 5,
-    fontSize: 17,
+    fontSize: 15,
     color: "#eee",
     fontWeight: "bold",
     textShadowRadius: 12,
