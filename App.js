@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import moment from "moment";
 import { Animated } from "react-native";
-import { TouchableOpacity } from "react-native-web";
+import { TouchableOpacity } from "react-native";
 
 const Timezone = {
   Brasil: "-03:00",
@@ -21,7 +21,7 @@ export default function App() {
   const [currentDate, setCurrentDate] = useState("");
   const [timezone, setTimezone] = useState(Timezone.Brasil);
   const [spinValue, setSpinValue] = useState(new Animated.Value(0));
-  const [actualCountry, setActualCountry] = new useState("Brasil")
+  const [actualCountry, setActualCountry] = new useState("do Brasil")
 
   useEffect(() => {
     let date = moment().utcOffset(timezone).format("DD/MM/YYYY HH:mm:ss");
@@ -38,19 +38,19 @@ export default function App() {
 
   function mudarHorarioBrasil() {
     setTimezone(Timezone.Brasil);
-    setActualCountry("Brasil")
+    setActualCountry("do Brasil")
     console.log("Timezone set to Brazil");
   }
 
   function mudarHorarioLondres() {
     setTimezone(Timezone.Londres);
-    setActualCountry("Londres")
+    setActualCountry("de Londres")
     console.log("Timezone set to London");
   }
 
   function mudarHorarioJapao() {
     setTimezone(Timezone.Japao);
-    setActualCountry("Japão")
+    setActualCountry("do Japão")
     console.log("Timezone set to Japan");
   }
 
@@ -75,7 +75,7 @@ export default function App() {
           source={require("./assets/img/crono3.png")}
           style={[styles.img, { transform: [{ rotate: spin }] }]}
         />
-        <Text style={[styles.horaStyle]}>Data e Hora atual de {actualCountry}</Text>
+        <Text style={[styles.horaStyle]}>Data e Hora atual {actualCountry}</Text>
         <Text style={[styles.horaAtual]}> {currentDate}</Text>
 
         <View style={styles.btnContainer}>
@@ -93,7 +93,7 @@ export default function App() {
             }}
             disabled={timezone == Timezone.Brasil}
           >
-            <Text style={[styles.btnText]}>Horario Do Brasil</Text>
+            <Text style={[styles.btnText]}>Horario do Brasil</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
